@@ -35,6 +35,10 @@ for i=1:length(files)
         tstamp2 = regexp(lines{1,2}{1,1}{3},'(\d+):(\d+):(\d+)','tokens');
         tsec = [str2num([tstamp1{1,1}{1};tstamp2{1,1}{1}])*60^2,str2num([tstamp1{1,1}{2};tstamp2{1,1}{2}])*60,str2num([tstamp1{1,1}{3};tstamp2{1,1}{3}])];
         tdelta = sum(tsec(2,:)-tsec(1,:)); % time delta in seconds
+    
+    if tdelta > 300
+        disp(['WARNING: There is a gap of 'num2str(tdelta/60) ' minutes between the two files.'])
+    end
         
         % create duplicate rows bridging the gap between the files
         for k=1:floor(tdelta/10)
@@ -57,3 +61,4 @@ for i=1:length(files)
         end
     end
 end
+fclose('all')  %so Excel doesn't think MATLAB still has the file open
