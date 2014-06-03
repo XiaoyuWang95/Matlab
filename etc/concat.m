@@ -47,7 +47,7 @@ for i=1:length(files)
         	s = mod(t,60); m = floor(mod(t-s,60^2)/60); h = floor((t-s-m)/60^2);
 
         	% write to Excel
-        	xl.setCells(sheets{1},[1,size(lines{1,1}{1,1},1)+k],{[cell2mat(tlast) ',' num2str(h) ':' num2str(m) ':' num2str(s)],line{1,1}{2:end}}, 'FFEE00');
+        	xl.setCells(sheets{1},[1,size(lines{1,1}{1,1},1)+k],{[cell2mat(tlast) ',' num2str(h,'%02d') ':' num2str(m,'%02d') ':' num2str(s,'%02d')],line{1,1}{2:end}}, 'FFEE00');
         end
     end
 
