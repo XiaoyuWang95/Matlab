@@ -8,9 +8,6 @@
 % ======================================================
 
 % instantiate an ActiveX connection with Excel
-% utils = getUtils;
-% utils.globalize('utils.xl');
-% [Excel,Workbooks,Sheets] = xl.new();
 
 xl = XL;
 
