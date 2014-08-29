@@ -8,9 +8,11 @@
 % ======================================================
 
 % instantiate an ActiveX connection with Excel
-utils = getUtils;
-utils.globalize('utils.xl');
-[Excel,Workbooks,Sheets] = xl.new();
+% utils = getUtils;
+% utils.globalize('utils.xl');
+% [Excel,Workbooks,Sheets] = xl.new();
+
+xl = XL;
 
 % open file dialog
 [files,path] = uigetfile({'*txt','Text Files (*.txt)';'*.*','All Files';},'Select Two Files to Concatenate','MultiSelect','On');
@@ -19,12 +21,12 @@ if isstr(files), files = {files}; end
 % file name
 t1 = regexp(files{1},'(\w+\d+)\s+(\d+)_(\d+)_(\d+)','tokens');
 t2 = regexp(files{2},'(\w+\d+)\s+(\d+)_(\d+)_(\d+)','tokens');
-sheets = xl.addSheets(Excel,{[t1{1,1}{1} ' ' t1{1,1}{2} '_' t1{1,1}{3} '-' t2{1,1}{3} '_' t1{1,1}{4}]});
+sheets = xl.addSheets({[t1{1,1}{1} ' ' t1{1,1}{2} '_' t1{1,1}{3} '-' t2{1,1}{3} '_' t1{1,1}{4}]});
 
 % loop through files
 for i=1:length(files)
     
-    file = fread(fopen(files{i},'r'),'*char');
+    file = fread(fopen([path files{i}],'r'),'*char');
     lines{i} = textscan(file,'%s','delimiter','\n');
 
     % after the first file, compute the difference between the files
@@ -44,7 +46,7 @@ for i=1:length(files)
         	s = mod(t,60); m = floor(mod(t-s,60^2)/60); h = floor((t-s-m)/60^2);
 
         	% write to Excel
-        	xl.set(sheets{1},[1,size(lines{1,1}{1,1},1)+k],{[cell2mat(tlast) ',' num2str(h) ':' num2str(m) ':' num2str(s)],line{1,1}{2:end}});
+        	xl.setCells(sheets{1},[1,size(lines{1,1}{1,1},1)+k],{[cell2mat(tlast) ',' num2str(h) ':' num2str(m) ':' num2str(s)],line{1,1}{2:end}}, 'FFEE00');
         end
     end
 
@@ -52,9 +54,9 @@ for i=1:length(files)
     for j=1:length(lines{1,i}{1,1})
         line = textscan(lines{1,i}{1,1}{j},'%s','delimiter','\t');
         if i>1 & j>2
-            xl.set(sheets{1},[1,size(lines{1,1}{1,1},1)+j+k-3],line{1,1}');
+            xl.setCells(sheets{1},[1,size(lines{1,1}{1,1},1)+j+k-3],line{1,1}');
         else
-            xl.set(sheets{1},[1,j],line{1,1}');
+            xl.setCells(sheets{1},[1,j],line{1,1}');
         end
     end
 end
